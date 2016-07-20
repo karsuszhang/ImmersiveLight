@@ -119,7 +119,7 @@ public class BaseCDObj : MonoBehaviour {
         return final;
     }
 
-    public static void FindNearestCD(Ray r, Collider[] cds, float lenght, out RaycastHit final_info)
+    public static bool FindNearestCD(Ray r, Collider[] cds, float lenght, out RaycastHit final_info)
     {
         final_info = new RaycastHit();
         float len = 999999f;
@@ -128,13 +128,18 @@ public class BaseCDObj : MonoBehaviour {
             RaycastHit info;
             if (cd.Raycast(r, out info, lenght))
             {
-                if (info.distance < len)
-                    final_info = info;
+				if (info.distance < len)
+				{
+					final_info = info;
+					return true;
+				}
             }
         }
+
+		return false;
     }
 
-    public static void FindNearestCD(Vector3 start, Vector3 end, Collider[] cds, out RaycastHit final_info)
+    public static bool FindNearestCD(Vector3 start, Vector3 end, Collider[] cds, out RaycastHit final_info)
     {
         Ray r = new Ray();
         r.origin = start;
@@ -146,9 +151,14 @@ public class BaseCDObj : MonoBehaviour {
             RaycastHit info;
             if (cd.Raycast(r, out info, (end - start).magnitude))
             {
-                if (info.distance < len)
-                    final_info = info;
+				if (info.distance < len)
+				{
+					final_info = info;
+					return true;
+				}
             }
         }
+
+		return false;
     }
 }

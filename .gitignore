@@ -1,2 +1,5 @@
 ImmersiveClient/Library/*
 ImmersiveClient/Temp/*
+ImmersiveClient/obj/*
+*.sln
+*.csproj

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 public class LightPlus : BaseCDObj {
 
+	[SerializeField]
+	public float ExistTime = 5f;
+
     enum RunningState
     {
         Flying,
@@ -98,7 +101,11 @@ public class LightPlus : BaseCDObj {
             DoEnding();
         }
 
-        CheckBoard();
+		if (ExistTime > 0f) {
+			ExistTime -= Time.deltaTime;
+			if (ExistTime <= 0f)
+				Release ();
+		}
 	}
 
     public void EndAt(Vector3 end_pos, BaseCDObj block_obj)
@@ -117,12 +124,6 @@ public class LightPlus : BaseCDObj {
 
         Length = 0f;*/
         //RadiusLength = dest_len;
-    }
-
-    private void CheckBoard()
-    {
-        if (Mathf.Abs(Pos.x) > 10f || Mathf.Abs(Pos.z) > 40f)
-            Release();
     }
 
     void DoEnding()
