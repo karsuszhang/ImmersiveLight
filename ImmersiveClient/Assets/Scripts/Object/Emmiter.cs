@@ -23,6 +23,9 @@ public class Emmiter : BaseCDObj {
     [SerializeField]
     public float MaxRotateAngle = 60f;
 
+    [SerializeField]
+    public float LightExistTime = -1f;
+
     private float m_TimeCount = 0f;
     private Color m_BaseColor;
     public Emmiter()
@@ -165,6 +168,7 @@ public class Emmiter : BaseCDObj {
         lo.SetColor(c, ratio * MaxLightIntensity);
         lo.SetScaleRatio(ratio, true);
         lo.LightEmmiter = this;
+        lo.ExistTime = this.LightExistTime;
         m_IsPressing = false;
 
         m_TimeCount = 0f;

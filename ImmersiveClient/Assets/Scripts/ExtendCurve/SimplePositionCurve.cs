@@ -8,6 +8,6 @@ public class SimplePositionCurve : AnimatedCurve {
 
     protected override void OnUpdate(float factor, bool isFinished)
     {
-        this.transform.position = From * (1f - factor) + factor * To;
+        this.transform.localPosition = From * (1f - factor) + factor * To;
     }
 }

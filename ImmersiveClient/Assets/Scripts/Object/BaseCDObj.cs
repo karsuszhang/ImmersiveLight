@@ -105,7 +105,8 @@ public class BaseCDObj : MonoBehaviour {
         FindNearestCD(r, cds, lp.RadiusLength, out final);
         if (final.collider == null)
         {
-            FindNearestCD(lp.LastPos, lp.Pos, cds, out final);
+            if((lp.Pos - lp.LastPos).magnitude > Constant.FloatEplison) 
+                FindNearestCD(lp.LastPos, lp.Pos, cds, out final);
             if (final.collider != null)
             {
                 //CommonUtil.CommonLogger.Log(gameObject.name + " Reflect LightPlus " + lp.gameObject.name + " by two point");

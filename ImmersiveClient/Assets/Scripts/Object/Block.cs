@@ -39,7 +39,7 @@ public class Block : BaseCDObj {
             {
                 LightPlus lp = (c as LightPlus);
                 lp.EndAt(final.point, this);
-                if (lp.LightIntensity >= 1f)
+                if (lp.LightIntensity >= BlockThreshold)
                 {
                     float absorb_rate = AbsorbEnergy ? (1f - AbsorbRate) : 1f;
                     int lightnum = GameHelper.Random(MinReflectNum, MaxReflectNum + 1);
@@ -47,7 +47,6 @@ public class Block : BaseCDObj {
                     float intentsity4cal = total_intensity;
                     float angle = Mathf.Acos(Vector3.Dot(final.normal, lp.Dir));
                     float d = Vector3.Cross(lp.Dir, final.normal).y;
-
 
                     for (int i = 0; i < lightnum; i++)
                     {
@@ -64,6 +63,7 @@ public class Block : BaseCDObj {
                         //rl.SetColor(HSBColor.LerpWithMinRatio(Color.black, lp.LightColor, ratio), intensity);
                         rl.SetColor(lp.LightColor, intensity);
                         rl.SetScaleRatio(ratio * lp.Scale, true);
+                        rl.ExistTime = lp.ExistTime;
 
                         float max_angle = (270f - Mathf.Rad2Deg * angle);
                         float a2t = GameHelper.Random(0f, max_angle);
@@ -72,7 +72,7 @@ public class Block : BaseCDObj {
 
                         rl.gameObject.name = lp.gameObject.name + "_sat_" + i;
 
-                        rl.AddUnCollideObj(this);
+                        //rl.AddUnCollideObj(this);
                     }
                 }
             }

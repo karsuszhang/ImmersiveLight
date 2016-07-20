@@ -16,6 +16,7 @@ public class AutoEmmiter : MonoBehaviour {
         {
             CommonUtil.CommonLogger.LogError(string.Format("{0} autoemmiter has no emmit", gameObject.name));
         }
+        m_TimeCount = ShootInterval;
 	}
 	
 	// Update is called once per frame

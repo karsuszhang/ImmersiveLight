@@ -5,7 +5,12 @@ using System.Collections.Generic;
 public class LightPlus : BaseCDObj {
 
 	[SerializeField]
-	public float ExistTime = 5f;
+	public float ExistTime = -1f;
+
+    [HideInInspector]
+    public bool ExistTimeShrink = false;
+    private float m_OrgScale = 1f;
+    private float m_OrgIntensity = 1f;
 
     enum RunningState
     {
@@ -61,6 +66,8 @@ public class LightPlus : BaseCDObj {
     private List<BaseCDObj> m_UnCollideObjs = new List<BaseCDObj>();
 
     private SphereCollider m_SCollider;
+
+    private float m_LifeTimeCount = 0f;
     public static LightPlus GenLightPlus()
     {
         GameObject lpo = CommonUtil.ResourceMng.Instance.GetResource("Object/LightPlus", CommonUtil.ResourceType.Model) as GameObject;
@@ -77,6 +84,8 @@ public class LightPlus : BaseCDObj {
 
 	// Update is called once per frame
 	void LateUpdate () {
+        DoOnFirstFrame();
+
         if (m_CurState != RunningState.Starting)
         {
             if (Speed > 0.1f)
@@ -102,9 +111,15 @@ public class LightPlus : BaseCDObj {
         }
 
 		if (ExistTime > 0f) {
-			ExistTime -= Time.deltaTime;
-			if (ExistTime <= 0f)
+            m_LifeTimeCount += Time.deltaTime;
+            if (m_LifeTimeCount >= ExistTime)
 				Release ();
+
+            if (ExistTimeShrink)
+            {
+                Scale = m_OrgScale * (1f - m_LifeTimeCount / ExistTime);
+                LightIntensity = m_OrgIntensity * (1f - m_LifeTimeCount / ExistTime);
+            }
 		}
 	}
 
@@ -177,5 +192,27 @@ public class LightPlus : BaseCDObj {
             Scale = MinScale + ratio * (m_BaseScale - MinScale);
         else
             Scale = m_BaseScale * ratio;
+    }
+
+    bool _FirstFrame = false;
+    void DoOnFirstFrame()
+    {
+        if (_FirstFrame)
+            return;
+        
+        _FirstFrame = true;
+
+        if (Speed <= Constant.FloatEplison)
+        {
+            SimplePositionCurve spc = GetComponentInChildren<SimplePositionCurve>();
+            if (spc != null)
+                spc.enabled = true;
+        }
+
+        if (ExistTimeShrink)
+        {
+            m_OrgScale = Scale;
+            m_OrgIntensity = LightIntensity;
+        }
     }
 }
