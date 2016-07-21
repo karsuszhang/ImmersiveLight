@@ -16,9 +16,13 @@ public class Game : MonoBehaviour {
     private List<BaseCDObj> m_CDObjs = new List<BaseCDObj>();
 
     private Dictionary<Receiver, bool> m_LevelStatus = new Dictionary<Receiver, bool>();
+
+    private InGameMainUI m_MainUI = null;
+    private int m_CurScore = 0;
 	// Use this for initialization
 	void Awake () {
         Instance = this;
+        m_MainUI = CommonUtil.UIManager.Instance.AddUI("UI/InGamePanel").GetComponent<InGameMainUI>();
 	}
 	
 	// Update is called once per frame
@@ -82,6 +86,12 @@ public class Game : MonoBehaviour {
     public void RegLevelReceiver(Receiver r)
     {
         m_LevelStatus[r] = false;
+    }
+
+    public void AddScore(int s)
+    {
+        m_CurScore += s;
+        m_MainUI.SetScore(m_CurScore);
     }
 
     public void ReceiverComplete(Receiver r)

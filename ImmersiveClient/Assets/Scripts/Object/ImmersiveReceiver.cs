@@ -70,6 +70,12 @@ public class ImmersiveReceiver : BaseCDObj {
 				{
 					m_CurIntensity += lp.LightIntensity * AbsorbRate;
 					//CommonUtil.CommonLogger.Log(string.Format("{0} Cur {1} Dest {2}", gameObject.name, m_CurIntensity, DestIntensity));
+                    if (m_CurIntensity >= DestIntensity)
+                    {
+                        m_CurIntensity -= DestIntensity;
+                        m_CurIntensity = Mathf.Max(m_CurIntensity, m_BaseIntensity);
+                        Game.Instance.AddScore(1);
+                    }
 
 					float ratio = Mathf.Min(1f, (m_CurIntensity - m_BaseIntensity) / (DestIntensity - m_BaseIntensity));
 
