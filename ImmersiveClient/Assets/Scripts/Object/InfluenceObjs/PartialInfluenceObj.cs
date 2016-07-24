@@ -45,7 +45,7 @@ public class PartialInfluenceObj : ReceiverInfluenceObj {
     {
         if (!m_ReceiverProgress.ContainsKey(obj))
         {
-            CommonUtil.CommonLogger.LogError(string.Format("PartialInfluenceObj {0} receive uninit event from {1}", gameObject.name, obj.gameObject.name));
+            CommonUtil.Logger.LogError(string.Format("PartialInfluenceObj {0} receive uninit event from {1}", gameObject.name, obj.gameObject.name));
             return;
         }
 
@@ -62,7 +62,7 @@ public class PartialInfluenceObj : ReceiverInfluenceObj {
             m_TimeCount = 0f;
             m_EndRatio = total_progress;
             m_DoAni = true;
-            CommonUtil.CommonLogger.Log(string.Format("PartialIO {0} doAni from {1} to {2}", gameObject.name, m_StartRatio, m_EndRatio));
+            CommonUtil.Logger.Log(string.Format("PartialIO {0} doAni from {1} to {2}", gameObject.name, m_StartRatio, m_EndRatio));
         }
 
 

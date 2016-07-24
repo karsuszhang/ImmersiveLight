@@ -3,8 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
+    public Game()
+    {
+        CommonUtil.Logger.Log("Game Construct");
+        _Instance = this;
+    }
 
-    public static Game Instance = null;
+    public static Game Instance
+    {
+        get
+        {
+            return _Instance;
+
+            /*if (_Instance == null)
+                return GameObject.FindObjectOfType<Game>();
+            else
+                return _Instance;*/
+        }
+    }
+    private static Game _Instance = null;
 
     public List<BaseCDObj> AllObjs
     {
@@ -19,22 +36,26 @@ public class Game : MonoBehaviour {
 
     private InGameMainUI m_MainUI = null;
     private int m_CurScore = 0;
+
+    private MapGenerator m_MapGenerator = new MapGenerator();
+
+    public ImmersiveReceiver CurPlayer { get; private set;}
 	// Use this for initialization
 	void Awake () {
-        Instance = this;
+        
         m_MainUI = CommonUtil.UIManager.Instance.AddUI("UI/InGamePanel").GetComponent<InGameMainUI>();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void LateUpdate () {
+        m_MapGenerator.Update();
 	}
 
     public void RegCDObj(BaseCDObj o)
     {
         if (m_CDObjs.Contains(o))
         {
-            CommonUtil.CommonLogger.LogError("Obj Reg Twice: " + o.gameObject.name);
+            CommonUtil.Logger.LogError("Obj Reg Twice: " + o.gameObject.name);
             return;
         }
 
@@ -54,7 +75,7 @@ public class Game : MonoBehaviour {
 
     public void UnRegObject(BaseCDObj o)
     {
-        //CommonUtil.CommonLogger.Log("Object UnReg " + o.gameObject.name);
+        //CommonUtil.Logger.Log("Object UnReg " + o.gameObject.name);
         m_CDObjs.Remove(o);
     }
 
@@ -94,11 +115,17 @@ public class Game : MonoBehaviour {
         m_MainUI.SetScore(m_CurScore);
     }
 
+    public void RegCurPlayer(ImmersiveReceiver ir)
+    {
+        CurPlayer = ir;
+        CommonUtil.Logger.Log("Immersive Player Change to " + ir.gameObject.name);
+    }
+
     public void ReceiverComplete(Receiver r)
     {
         if (!m_LevelStatus.ContainsKey(r))
         {
-            CommonUtil.CommonLogger.LogError("Complete UnReg Receiver " + r.gameObject.name);
+            CommonUtil.Logger.LogError("Complete UnReg Receiver " + r.gameObject.name);
             return;
         }
            

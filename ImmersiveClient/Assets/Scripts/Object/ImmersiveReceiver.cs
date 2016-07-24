@@ -27,6 +27,11 @@ public class ImmersiveReceiver : BaseCDObj {
 
 	}
 
+    protected override void _Awake()
+    {
+        base._Awake();
+        Game.Instance.RegCurPlayer(this);
+    }
 	protected override void _Start()
 	{
 		base._Start();
@@ -36,6 +41,7 @@ public class ImmersiveReceiver : BaseCDObj {
 		gameObject.GetComponentInChildren<Light>().color = ReceiveColor;
 		m_Render = gameObject.GetComponentInChildren<MeshRenderer>();
 		m_Light = gameObject.GetComponentInChildren<Light>();
+
 
 	}
 	// Update is called once per frame

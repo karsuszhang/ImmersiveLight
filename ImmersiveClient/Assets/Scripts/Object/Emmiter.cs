@@ -58,6 +58,7 @@ public class Emmiter : BaseCDObj {
             Color c = HSBColor.LerpWithMinRatio(m_BaseColor, LightColor, m_TimeCount / MaxIntensityTime);
             gameObject.GetComponentInChildren<MeshRenderer>().material.SetColor("_Color", c);
         }
+        /*
         #if UNITY_EDITOR
 		CheckKeyBoard ();
         CheckMouse();
@@ -66,6 +67,7 @@ public class Emmiter : BaseCDObj {
         #endif
 
         CheckRotate();
+        */
 	}
 
     void CheckMouse()
@@ -108,7 +110,7 @@ public class Emmiter : BaseCDObj {
                     m_PressedFingerID = t.fingerId;
                     m_IsPressing = true;
                     m_PressPos = t.position;
-                    CommonUtil.CommonLogger.Log(m_PressPos.ToString());
+                    CommonUtil.Logger.Log(m_PressPos.ToString());
                     break;
                 }
             }
@@ -177,8 +179,9 @@ public class Emmiter : BaseCDObj {
 
     public void SetColorLerp(float ratio)
     {
-        Color c = HSBColor.LerpWithMinRatio(m_BaseColor, LightColor, ratio);
+        Color c = HSBColor.Lerp(m_BaseColor, LightColor, ratio);
         gameObject.GetComponentInChildren<MeshRenderer>().material.SetColor("_Color", c);
+        //CommonUtil.CommonLogger.Log("Emmiter Lerp Color " + c.ToString() + " ratio " + ratio);
     }
 
     public void SetBaseColor(Color c)

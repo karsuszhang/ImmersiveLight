@@ -6,17 +6,17 @@ public class ScreenLog : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		UITextList tl = gameObject.GetComponent<UITextList> ();
-		foreach (CommonUtil.LogRecord r in CommonUtil.CommonLogger.s_Records) {
+		foreach (CommonUtil.LogRecord r in CommonUtil.Logger.s_Records) {
 			tl.Add(TransOrgLog(r.type, r.log));
 		}
 	
 		tl.scrollBar.value = 1f;
-		CommonUtil.CommonLogger.NewLogEvent += this.LogIncoming;
+		CommonUtil.Logger.NewLogEvent += this.LogIncoming;
 	}
 
 	void OnDestroy()
 	{
-		CommonUtil.CommonLogger.NewLogEvent -= LogIncoming;
+		CommonUtil.Logger.NewLogEvent -= LogIncoming;
 	}
 	
 	// Update is called once per frame

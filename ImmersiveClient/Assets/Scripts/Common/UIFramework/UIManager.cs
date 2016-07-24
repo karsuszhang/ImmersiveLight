@@ -72,7 +72,7 @@ namespace CommonUtil
 		public Vector3 GetScreenPos(Vector3 world_pos)
 		{
 			if (MainCamera == null) {
-				CommonLogger.LogError ("Can't find MainCamera");
+				Logger.LogError ("Can't find MainCamera");
 				return Vector3.zero;
 			}
 

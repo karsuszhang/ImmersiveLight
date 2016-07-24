@@ -18,7 +18,7 @@ namespace CommonUtil
 
 	public delegate void OnNewLog(LogType type, string log);
 
-	public class CommonLogger{
+	public class Logger{
 		const string PreFix = "[CommonLogZyf] ";
 		const int MaxLogRecord = 100;
 		public static bool ShowLogOnScreen = false;

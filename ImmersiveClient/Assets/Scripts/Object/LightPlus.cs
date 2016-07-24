@@ -103,7 +103,8 @@ public class LightPlus : BaseCDObj {
 
         if (m_CurState == RunningState.Flying || m_CurState == RunningState.Starting)
         {
-            Game.Instance.CheckCD(this, m_UnCollideObjs);
+            //if( Speed > Constant.FloatEplison)
+                Game.Instance.CheckCD(this, m_UnCollideObjs);
         }
         else if (m_CurState == RunningState.Ending)
         {
@@ -206,7 +207,10 @@ public class LightPlus : BaseCDObj {
         {
             SimplePositionCurve spc = GetComponentInChildren<SimplePositionCurve>();
             if (spc != null)
+            {
+                spc.AddBias2Factor(GameHelper.Random(0, 1f));
                 spc.enabled = true;
+            }
         }
 
         if (ExistTimeShrink)

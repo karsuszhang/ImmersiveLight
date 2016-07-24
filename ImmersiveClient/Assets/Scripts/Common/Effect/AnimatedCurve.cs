@@ -183,6 +183,11 @@ public abstract class AnimatedCurve : MonoBehaviour {
 		}
 		else Sample(mFactor, false);
 	}
+
+    public void AddBias2Factor(float bias)
+    {
+        mFactor += bias;
+    }
 		
 	/// <summary>
 	/// Mark as not started when finished to enable delay on next play.

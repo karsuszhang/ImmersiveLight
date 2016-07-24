@@ -30,7 +30,7 @@ public class ColorChangerGenerator : MonoBehaviour {
     {
         if (o != Obj)
         {
-            CommonUtil.CommonLogger.LogError(string.Format("Mismath ColorChanger {0} Release on {1}", o.gameObject.name, gameObject.name));
+            CommonUtil.Logger.LogError(string.Format("Mismath ColorChanger {0} Release on {1}", o.gameObject.name, gameObject.name));
             return;
         }
         Obj = null;
