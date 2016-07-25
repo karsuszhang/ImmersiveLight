@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public delegate void LightDimOver(DimLight dl);
+
 public class DimLight : MonoBehaviour {
+
+    public event LightDimOver EventDimOver;
 
     private Light m_Light;
     private float m_OrgIntensity = 0f;
@@ -26,7 +30,11 @@ public class DimLight : MonoBehaviour {
 
             m_Light.intensity = BaseIntensity + (1f - ratio) * (m_OrgIntensity - BaseIntensity);
             if (m_TimeCount >= DimTime)
+            {
+                if (EventDimOver != null)
+                    EventDimOver(this);
                 IsDim = false;
+            }
         }
 	}
 

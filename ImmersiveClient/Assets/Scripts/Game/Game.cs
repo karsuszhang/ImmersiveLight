@@ -45,6 +45,11 @@ public class Game : MonoBehaviour {
         
         m_MainUI = CommonUtil.UIManager.Instance.AddUI("UI/InGamePanel").GetComponent<InGameMainUI>();
 	}
+
+    void Start()
+    {
+        m_MapGenerator.StartLevel();
+    }
 	
 	// Update is called once per frame
 	void LateUpdate () {

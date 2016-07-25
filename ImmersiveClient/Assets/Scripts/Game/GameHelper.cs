@@ -12,6 +12,15 @@ public enum ColorSlotType
 public static class GameHelper {
     static System.Random s_Randomer;
 
+    public static Vector3 RandomNormalizedVector3()
+    {
+        Vector3 ret = new Vector3(GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f));
+        while(ret.magnitude <= Constant.FloatEplison)
+            ret = new Vector3(GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f));
+
+        return ret.normalized;
+    }
+
     public static int Random(int min, int max)
     {
         if (s_Randomer == null)
