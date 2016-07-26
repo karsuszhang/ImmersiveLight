@@ -108,7 +108,10 @@ public class BaseCDObj : MonoBehaviour {
         RaycastHit final = new RaycastHit();
         Ray r = new Ray();
         r.origin = lp.Pos;
-        r.direction = lp.Dir;
+        if (lp.Speed <= Constant.FloatEplison)
+            r.direction = (this.Pos - lp.Pos).normalized;
+        else
+            r.direction = lp.Dir;
         FindNearestCD(r, cds, lp.RadiusLength, out final);
         if (final.collider == null)
         {

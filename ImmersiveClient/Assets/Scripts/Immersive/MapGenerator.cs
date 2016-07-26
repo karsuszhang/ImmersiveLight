@@ -41,7 +41,7 @@ public class MapGenerator {
         dir.y = 0f;
         dir.Normalize();
 
-        Vector3 pos = GameHelper.Random(8f, 20f) * dir + last_node.transform.position;
+        Vector3 pos = GameHelper.Random(15f, 30f) * dir + last_node.transform.position;
         int mapnode = GameHelper.Random(1, 4);
 
         GameObject startnode = (CommonUtil.ResourceMng.Instance.GetResource("MapNode/MapNode" + mapnode, CommonUtil.ResourceType.Model)) as GameObject;
