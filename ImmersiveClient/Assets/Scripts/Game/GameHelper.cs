@@ -14,9 +14,9 @@ public static class GameHelper {
 
     public static Vector3 RandomNormalizedVector3()
     {
-        Vector3 ret = new Vector3(GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f));
+        Vector3 ret = new Vector3(GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f));
         while(ret.magnitude <= Constant.FloatEplison)
-            ret = new Vector3(GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f), GameHelper.Random(0f, 1f));
+            ret = new Vector3(GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f));
 
         return ret.normalized;
     }
@@ -32,7 +32,7 @@ public static class GameHelper {
     public static float Random(float min, float max)
     {
         if (s_Randomer == null)
-            s_Randomer = new System.Random(Time.frameCount);
+            s_Randomer = new System.Random(System.DateTime.Now.Millisecond);
 
         int p = Random(0, 100);
 

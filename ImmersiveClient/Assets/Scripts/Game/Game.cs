@@ -48,7 +48,7 @@ public class Game : MonoBehaviour {
 
     void Start()
     {
-        m_MapGenerator.StartLevel();
+        //m_MapGenerator.StartLevel();
     }
 	
 	// Update is called once per frame
