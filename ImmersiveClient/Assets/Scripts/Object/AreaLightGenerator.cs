@@ -14,13 +14,15 @@ public class AreaLightGenerator : MonoBehaviour {
 
     public DimLight BindedLight;
 
+    const float GenInterval = 2f;
 
     private List<LightPlus> m_Lights = new List<LightPlus>();
     private int m_GenedNum = 0;
     private bool m_Stop = false;
+    private float m_TimeCout = 0f;
 	// Use this for initialization
 	void Start () {
-	
+        GenLight(true);
 	}
 	
 	// Update is called once per frame
@@ -33,12 +35,17 @@ public class AreaLightGenerator : MonoBehaviour {
                 i++;
         }
 
-        if (m_Lights.Count < MaxNumSameTime && m_GenedNum < GenNum)
-            GenLight();
+        m_TimeCout += Time.deltaTime;
+        if (m_TimeCout >= GenInterval)
+        {
+            m_TimeCout -= GenInterval;
+            if (m_Lights.Count < MaxNumSameTime && m_GenedNum < GenNum)
+                GenLight();
+        }
 
         if (!m_Stop)
         {
-            if (m_Lights.Count == 0)
+            if (m_Lights.Count == 0 && m_GenedNum >= GenNum)
             {
                 m_Stop = true;
                 if (BindedLight != null)
@@ -56,7 +63,7 @@ public class AreaLightGenerator : MonoBehaviour {
         #endif
     }
 
-    void GenLight()
+    void GenLight(bool gen2full = false)
     {
         while (m_Lights.Count < MaxNumSameTime)
         {
@@ -70,6 +77,8 @@ public class AreaLightGenerator : MonoBehaviour {
 
             m_GenedNum++;
             if (m_GenedNum >= MaxNumSameTime)
+                break;
+            if (!gen2full)
                 break;
         }
     }
