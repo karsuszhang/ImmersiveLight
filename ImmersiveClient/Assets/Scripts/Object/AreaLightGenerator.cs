@@ -68,11 +68,23 @@ public class AreaLightGenerator : MonoBehaviour {
         while (m_Lights.Count < MaxNumSameTime)
         {
             LightPlus lp = LightPlus.GenLightPlus();
-            Vector3 dir = GameHelper.RandomNormalizedVector3();
-            dir.y = 0f;
-            dir.Normalize();
+            Vector3 pos = Vector3.zero;
+            bool pos_ok = true;
+            do
+            {
+                Vector3 dir = GameHelper.RandomNormalizedVector3();
+                dir.y = 0f;
+                dir.Normalize();
+                pos = dir * GameHelper.Random(0f, Radius) + this.transform.position;
+                Collider[] overs = Physics.OverlapSphere(pos, lp.RadiusLength);
+                if(overs != null && overs.Length > 0)
+                    pos_ok = false;
+                else
+                    pos_ok = true;
+            } while(!pos_ok);
+
             //CommonUtil.Logger.Log(dir.ToString());
-            lp.SetAbsolutePos(dir * GameHelper.Random(0f, Radius) + this.transform.position);
+            lp.SetAbsolutePos(pos);
             m_Lights.Add(lp);
 
             m_GenedNum++;
