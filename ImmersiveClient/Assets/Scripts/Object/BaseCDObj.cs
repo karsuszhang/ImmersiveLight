@@ -13,7 +13,7 @@ public enum ObjectType
     EmmiterColorChanger,
 }
 
-public class BaseCDObj : MonoBehaviour {
+public class BaseCDObj : CommonObjBase {
 
     protected BaseCDObj(ObjectType t)
     {

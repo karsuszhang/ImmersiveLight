@@ -27,10 +27,7 @@
 		void surf (Input IN, inout SurfaceOutput o) {
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex);
-			if(c.a < _Threshold)
-				o.Albedo = _Color.rgb;
-			else
-				o.Albedo = c.rgb;
+			o.Albedo = _Color.rgb * c;
 			o.Alpha = 1;
 		}
 		ENDCG

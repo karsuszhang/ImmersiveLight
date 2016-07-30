@@ -15,16 +15,21 @@ public class ImmersiveReceiver : BaseCDObj {
 	[SerializeField]
 	public float DropRate = 0.001f;
 
+    public float HP { get ; private set;}
+
+    public const float MAX_HP = 10f;
+
 	//public event OnReceiverDestRatioChanged RatioChangeEvent;
 
 	private float m_BaseIntensity;
 	private float m_CurIntensity;
 	private MeshRenderer m_Render = null;
 	private Light m_Light = null;
+    private SphereCollider m_Collider = null;
 
 	public ImmersiveReceiver() : base(ObjectType.Receiver)
 	{
-
+        HP = MAX_HP;
 	}
 
     protected override void _Awake()
@@ -41,18 +46,38 @@ public class ImmersiveReceiver : BaseCDObj {
 		gameObject.GetComponentInChildren<Light>().color = ReceiveColor;
 		m_Render = gameObject.GetComponentInChildren<MeshRenderer>();
 		m_Light = gameObject.GetComponentInChildren<Light>();
+        m_Collider = gameObject.GetComponentInChildren<SphereCollider>();
 
-
+        gameObject.GetComponentInChildren<Light>().intensity = DestIntensity;
 	}
 	// Update is called once per frame
 	void Update () {
-		if (m_CurIntensity > m_BaseIntensity)
+		/*if (m_CurIntensity > m_BaseIntensity)
 		{
 			m_CurIntensity = Mathf.Max(m_BaseIntensity, m_CurIntensity - DropRate);
 			SetRatio((m_CurIntensity - m_BaseIntensity) / DestIntensity);
 			m_Light.intensity = m_CurIntensity;
-		}
+		}*/
 	}
+
+    void FixedUpdate()
+    {
+        CheckOverlapInteractable();
+    }
+
+    void CheckOverlapInteractable()
+    {
+        int layer_mask = 1 << (int)SpecifiedLayer.InteractableObj;
+        Collider[] cds = Physics.OverlapSphere(this.transform.position, m_Collider.radius, layer_mask);
+        foreach (Collider cd in cds)
+        {
+            HPTrap hpt = GameHelper.GetTypeUpAbove<HPTrap>(cd.gameObject);
+            if (hpt != null)
+            {
+                hpt.PlayerCD(this);
+            }
+        }
+    }
 
 	private void SetRatio(float r)
 	{
@@ -61,6 +86,17 @@ public class ImmersiveReceiver : BaseCDObj {
 		//if (RatioChangeEvent != null)
 		//	RatioChangeEvent(r, this);
 	}
+
+    public void HPChange(float change)
+    {
+        HP += change;
+        HP = Mathf.Min(HP, MAX_HP);
+
+        float ratio = HP / MAX_HP;
+        float intensity = m_BaseIntensity + (DestIntensity - m_BaseIntensity) * ratio;
+
+        gameObject.GetComponentInChildren<Light>().intensity = intensity;
+    }
 
 	public override void CheckCD(BaseCDObj c)
 	{
@@ -85,7 +121,7 @@ public class ImmersiveReceiver : BaseCDObj {
 
 					float ratio = Mathf.Min(1f, (m_CurIntensity - m_BaseIntensity) / (DestIntensity - m_BaseIntensity));
 
-					gameObject.GetComponentInChildren<Light>().intensity = m_CurIntensity;
+					//gameObject.GetComponentInChildren<Light>().intensity = m_CurIntensity;
 					SetRatio(ratio);
 				}
 

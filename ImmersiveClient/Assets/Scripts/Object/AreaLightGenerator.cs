@@ -12,6 +12,12 @@ public class AreaLightGenerator : MonoBehaviour {
     [SerializeField]
     public int MaxNumSameTime = 5;
 
+    [SerializeField]
+    public float GenLightIntensity = 0.6f;
+
+    [SerializeField]
+    public Color LightColor = Color.white;
+
     public DimLight BindedLight;
 
     const float GenInterval = 2f;
@@ -85,6 +91,7 @@ public class AreaLightGenerator : MonoBehaviour {
 
             //CommonUtil.Logger.Log(dir.ToString());
             lp.SetAbsolutePos(pos);
+            lp.SetColor(LightColor, GenLightIntensity);
             m_Lights.Add(lp);
 
             m_GenedNum++;

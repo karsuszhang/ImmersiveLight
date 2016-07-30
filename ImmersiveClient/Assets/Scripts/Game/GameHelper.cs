@@ -1,12 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum SpecifiedLayer
+{
+    PlayerObj = 8,
+    MapObj = 9,
+    InteractableObj = 10,
+}
+
 public enum ColorSlotType
 {
     R,
     G,
     B,
     All,
+}
+
+public abstract class CommonObjBase :MonoBehaviour
+{
 }
 
 public static class GameHelper {
@@ -37,6 +48,18 @@ public static class GameHelper {
         int p = Random(0, 100);
 
         return min + (float)p / 100f * (max - min);
+    }
+
+    public static T GetTypeUpAbove<T>(GameObject obj) where T : CommonObjBase
+    {
+        T ret = obj.GetComponent<T>();
+        if (ret != null)
+            return ret;
+
+        if (obj.transform.parent == null)
+            return null;
+
+        return GetTypeUpAbove<T>(obj.transform.parent.gameObject);
     }
 
     public static float GetColor(this Color c, ColorSlotType t)
