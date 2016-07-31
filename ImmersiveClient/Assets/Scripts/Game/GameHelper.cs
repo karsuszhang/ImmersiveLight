@@ -50,6 +50,15 @@ public static class GameHelper {
         return min + (float)p / 100f * (max - min);
     }
 
+    public static void SetLayer(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            SetLayer(obj.transform.GetChild(i).gameObject, layer);
+        }
+    }
+
     public static T GetTypeUpAbove<T>(GameObject obj) where T : CommonObjBase
     {
         T ret = obj.GetComponent<T>();

@@ -60,7 +60,7 @@ public class AreaLightGenerator : MonoBehaviour {
         }
 	}
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         #if UNITY_EDITOR
         Gizmos.color = Color.blue;

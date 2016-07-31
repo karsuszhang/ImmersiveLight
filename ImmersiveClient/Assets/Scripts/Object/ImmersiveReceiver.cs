@@ -71,7 +71,7 @@ public class ImmersiveReceiver : BaseCDObj {
         Collider[] cds = Physics.OverlapSphere(this.transform.position, m_Collider.radius, layer_mask);
         foreach (Collider cd in cds)
         {
-            HPTrap hpt = GameHelper.GetTypeUpAbove<HPTrap>(cd.gameObject);
+            InteractableBase hpt = GameHelper.GetTypeUpAbove<InteractableBase>(cd.gameObject);
             if (hpt != null)
             {
                 hpt.PlayerCD(this);
