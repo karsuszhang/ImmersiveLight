@@ -14,6 +14,13 @@ public class MapNode : MonoBehaviour {
     private bool Activated = false;
 
     Dictionary<DimLight, bool> m_LightDimState = new Dictionary<DimLight, bool>();
+
+    List<LightPlus> m_GuideLP = new List<LightPlus>();
+
+    const int LinkChildNum = 1;
+    public MapNode ParentNode = null;
+    private List<MapNode> m_LinkedChildNode = new List<MapNode>();
+
 	// Use this for initialization
 	void Start () {
         DimLight[] dls = GetComponentsInChildren<DimLight>();
@@ -39,8 +46,20 @@ public class MapNode : MonoBehaviour {
                         ae.Activated = true;
                     }
                     Activated = true;
+                    foreach (MapNode mn in m_LinkedChildNode)
+                    {
+                        //mn.GenChlidNode();
+                    }
                 }
             }
+        }
+
+        for (int i = 0; i < m_GuideLP.Count ;)
+        {
+            if (m_GuideLP[i].Released)
+                m_GuideLP.RemoveAt(i);
+            else
+                i++;
         }
 	}
 
@@ -63,19 +82,37 @@ public class MapNode : MonoBehaviour {
 
     public void GenGuideLight(Vector3 pos)
     {
+        float light_interval = 4f;
         float dis = (transform.position - pos).magnitude;
-        int guide_num = Mathf.CeilToInt(dis / 4f);
+        int guide_num = Mathf.CeilToInt(dis / light_interval);
+        float interval = dis / guide_num;
         Vector3 f = (transform.position - pos).normalized;
         Vector3 r = Vector3.Cross(f, Vector3.up);
+        CommonUtil.Logger.Log("GenGuideLight " + guide_num);
         for (int i = 0; i < guide_num; i++)
         {
-            float disturb_f = GameHelper.Random(0f, 3.5f);
+            float disturb_f = GameHelper.Random(-1.5f, 1.5f);
             float disturb_h = GameHelper.Random(-3.5f, 3.5f);
 
-            Vector3 p = pos + (i + 1 + disturb_f) * f + disturb_h * r;
+            Vector3 p = pos + ((i + 1) * interval + disturb_f) * f + disturb_h * r;
             LightPlus lp = LightPlus.GenLightPlus();
             lp.SetAbsolutePos(p);
+            lp.SetColor(lp.LightColor, 0.3f);
             //CommonUtil.Logger.Log("Gen Guide Light at " + p.ToString());
+            m_GuideLP.Add(lp);
+        }
+    }
+
+    public void GenChlidNode()
+    {
+        if (m_LinkedChildNode.Count > 0)
+            return;
+
+        for (int i = 0; i < LinkChildNum; i++)
+        {
+            MapNode mn = Game.Instance.MapGen.GenMapNode(this.transform.position);
+            //mn.GenGuideLight(this.transform.position);
+            m_LinkedChildNode.Add(mn);
         }
     }
 }

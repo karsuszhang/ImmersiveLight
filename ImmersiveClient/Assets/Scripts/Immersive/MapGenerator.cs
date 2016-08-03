@@ -21,6 +21,7 @@ public class MapGenerator {
         MapNode mn = startnode.GetComponent<MapNode>();
         m_AliveNodes.Add(mn);
         mn.EventOnMapNodeFin += this.OnNodeFinished;
+        //mn.GenChlidNode();
     }
 
     public void Update()
@@ -32,23 +33,25 @@ public class MapGenerator {
         m_AliveNodes.Remove(mn);
         m_FinishedNodes.Add(mn);
         mn.EventOnMapNodeFin -= this.OnNodeFinished;
-        GenMapNode(mn);
+        //GenMapNode(mn.gameObject.transform.position);
+        mn.GenChlidNode();
     }
 
-    void GenMapNode(MapNode last_node)
+    public MapNode GenMapNode(Vector3 ref_pos)
     {
         Vector3 dir = GameHelper.RandomNormalizedVector3();
         dir.y = 0f;
         dir.Normalize();
 
-        Vector3 pos = GameHelper.Random(15f, 30f) * dir + last_node.transform.position;
+        Vector3 pos = GameHelper.Random(25f, 40f) * dir + ref_pos;
         int mapnode = GameHelper.Random(1, 4);
 
         GameObject startnode = (CommonUtil.ResourceMng.Instance.GetResource("MapNode/MapNode" + mapnode, CommonUtil.ResourceType.Model)) as GameObject;
         startnode.transform.position = pos;
-        startnode.GetComponent<MapNode>().GenGuideLight(last_node.transform.position);
+        startnode.GetComponent<MapNode>().GenGuideLight(ref_pos);
         MapNode mn = startnode.GetComponent<MapNode>();
         m_AliveNodes.Add(mn);
         mn.EventOnMapNodeFin += this.OnNodeFinished;
+        return mn;
     }
 }

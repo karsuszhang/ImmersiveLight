@@ -39,7 +39,7 @@ public class Block : BaseCDObj {
             {
                 LightPlus lp = (c as LightPlus);
                 lp.EndAt(final.point, this);
-                CommonUtil.Logger.Log(string.Format("{0} LightPlus cd {1}", lp.gameObject.name, gameObject.name));
+                //CommonUtil.Logger.Log(string.Format("{0} LightPlus cd {1}", lp.gameObject.name, gameObject.name));
                 if (lp.LightIntensity >= BlockThreshold)
                 {
                     float absorb_rate = AbsorbEnergy ? (1f - AbsorbRate) : 1f;

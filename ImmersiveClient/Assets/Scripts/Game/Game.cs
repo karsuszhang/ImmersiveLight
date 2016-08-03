@@ -37,6 +37,7 @@ public class Game : MonoBehaviour {
     private InGameMainUI m_MainUI = null;
     private int m_CurScore = 0;
 
+    public MapGenerator MapGen{get{ return m_MapGenerator; }}
     private MapGenerator m_MapGenerator = new MapGenerator();
 
     public ImmersiveReceiver CurPlayer { get; private set;}
@@ -48,7 +49,7 @@ public class Game : MonoBehaviour {
 
     void Start()
     {
-        //m_MapGenerator.StartLevel();
+        m_MapGenerator.StartLevel();
     }
 	
 	// Update is called once per frame
