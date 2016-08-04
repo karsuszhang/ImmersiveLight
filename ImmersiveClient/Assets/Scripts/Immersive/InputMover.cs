@@ -7,7 +7,7 @@ public class InputMover : MonoBehaviour
     [SerializeField]
     public float Speed = 1f;
 
-    private Vector3 Dir = Vector3.zero;
+    public Vector3 Dir = Vector3.zero;
 
 	private float m_CollideR = 0f;
 	// Use this for initialization

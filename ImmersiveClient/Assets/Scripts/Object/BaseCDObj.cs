@@ -11,6 +11,7 @@ public enum ObjectType
     Reflector,
     Receiver,
     EmmiterColorChanger,
+    LightTransfer,
 }
 
 public class BaseCDObj : CommonObjBase {
@@ -88,7 +89,16 @@ public class BaseCDObj : CommonObjBase {
 
     public virtual void CheckCD(BaseCDObj c)
     {
+        if (c.Type == ObjectType.LightPlus)
+        {
+            RaycastHit final = FindCollideWithLightPlus(c as LightPlus);
 
+            if (final.collider != null)
+            {
+                LightPlus lp = (c as LightPlus);
+                lp.EndAt(final.point, this);
+            }
+        }
     }
 
     public virtual void Release()

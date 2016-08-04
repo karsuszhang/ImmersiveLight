@@ -128,4 +128,13 @@ public class ImmersiveReceiver : BaseCDObj {
 			}
 		}
 	}
+
+    public void Stop()
+    {
+        InputMover im = gameObject.GetComponent<InputMover>();
+        if (im != null)
+        {
+            im.Dir = Vector3.zero;
+        }
+    }
 }
