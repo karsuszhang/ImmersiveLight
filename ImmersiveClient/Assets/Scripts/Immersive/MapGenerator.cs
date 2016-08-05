@@ -15,7 +15,7 @@ public class MapGenerator {
             return;
         }
 
-        GameObject startnode = (CommonUtil.ResourceMng.Instance.GetResource("MapNode/MapNode1", CommonUtil.ResourceType.Model)) as GameObject;
+        GameObject startnode = (CommonUtil.ResourceMng.Instance.GetResource("MapNode/MapNode2", CommonUtil.ResourceType.Model)) as GameObject;
         startnode.transform.position = GameObject.Find("StartPoint").transform.position;
         startnode.GetComponent<MapNode>().GenGuideLight(Game.Instance.CurPlayer.Pos);
         MapNode mn = startnode.GetComponent<MapNode>();

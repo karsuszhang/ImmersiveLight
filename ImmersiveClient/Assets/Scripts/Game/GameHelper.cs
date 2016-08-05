@@ -35,7 +35,7 @@ public static class GameHelper {
     public static int Random(int min, int max)
     {
         if (s_Randomer == null)
-            s_Randomer = new System.Random(Time.frameCount);
+            s_Randomer = new System.Random(System.DateTime.Now.Millisecond);
 
         return s_Randomer.Next(min, max);
     }

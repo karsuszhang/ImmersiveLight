@@ -21,6 +21,7 @@ public class MapNode : MonoBehaviour {
     public MapNode ParentNode = null;
     private List<MapNode> m_LinkedChildNode = new List<MapNode>();
 
+    EventPoint[] m_Events;
 	// Use this for initialization
 	void Start () {
         DimLight[] dls = GetComponentsInChildren<DimLight>();
@@ -29,6 +30,8 @@ public class MapNode : MonoBehaviour {
             m_LightDimState[dl] = false;
             dl.EventDimOver += this.OnLightDimed;
         }
+
+        GenEvent();
 	}
 	
 	// Update is called once per frame
@@ -113,6 +116,28 @@ public class MapNode : MonoBehaviour {
             MapNode mn = Game.Instance.MapGen.GenMapNode(this.transform.position);
             //mn.GenGuideLight(this.transform.position);
             m_LinkedChildNode.Add(mn);
+        }
+    }
+
+    void GenEvent()
+    {
+        m_Events = gameObject.GetComponentsInChildren<EventPoint>();
+        if (m_Events.Length == 0)
+            return;
+
+        int num = GameHelper.Random(0, m_Events.Length + 1);
+        CommonUtil.Logger.Log("Event Num " + num);
+        if (num == 0)
+            return;
+        
+        for (int i = 0; i < m_Events.Length; i++)
+        {
+            float possible = GameHelper.Random(0f, 1f);
+            CommonUtil.Logger.Log("possible " + possible);
+            if (possible <= ((float)num) / m_Events.Length)
+            {
+                m_Events[i].GenEvent();
+            }
         }
     }
 }
