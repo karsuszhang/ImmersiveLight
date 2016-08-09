@@ -16,6 +16,7 @@ public class MapNode : MonoBehaviour {
     Dictionary<DimLight, bool> m_LightDimState = new Dictionary<DimLight, bool>();
 
     List<LightPlus> m_GuideLP = new List<LightPlus>();
+    List<GameObject> m_ObstacleObjs = new List<GameObject>();
 
     const int LinkChildNum = 1;
     public MapNode ParentNode = null;
@@ -85,7 +86,7 @@ public class MapNode : MonoBehaviour {
 
     public void GenGuideLight(Vector3 pos)
     {
-        float light_interval = 4f;
+        float light_interval = Game.Instance.GetGuideLightInterval();
         float dis = (transform.position - pos).magnitude;
         int guide_num = Mathf.CeilToInt(dis / light_interval);
         float interval = dis / guide_num;
@@ -102,6 +103,28 @@ public class MapNode : MonoBehaviour {
             lp.SetAbsolutePos(p);
             lp.SetColor(lp.LightColor, 0.3f);
             //CommonUtil.Logger.Log("Gen Guide Light at " + p.ToString());
+            if (i > 0)
+            {
+                if (Game.Instance.GenTrapOnRoad())
+                {
+                    float ratio = GameHelper.Random(0f, 1f);
+                    Vector3 trap_pos = m_GuideLP[i - 1].Pos + ratio * (p - m_GuideLP[i-1].Pos).magnitude * (p - m_GuideLP[i-1].Pos).normalized;
+                    GameObject trap = Game.Instance.GenTrap();
+                    trap.transform.position = trap_pos;
+                    m_ObstacleObjs.Add(trap);
+                }
+
+                if (Game.Instance.GenTrapOnRoad())
+                {
+                    GameObject enemy = Game.Instance.GenEnemy();
+                    m_ObstacleObjs.Add(enemy);
+                    Enemy e = enemy.GetComponent<Enemy>();
+
+                    Vector3 dir = GameHelper.RandomNormalizedVector3(true);
+                    enemy.transform.position = p + dir * GameHelper.Random(Mathf.Min(1f, e.AlarmDis), e.AlarmDis);
+                   
+                }
+            }
             m_GuideLP.Add(lp);
         }
     }
@@ -125,7 +148,7 @@ public class MapNode : MonoBehaviour {
         if (m_Events.Length == 0)
             return;
 
-        int num = GameHelper.Random(0, m_Events.Length + 1);
+        int num = Mathf.Min(m_Events.Length, Mathf.CeilToInt(GameHelper.Random(Game.Instance.GetEventNumMin(), 1f) * m_Events.Length));
         CommonUtil.Logger.Log("Event Num " + num);
         if (num == 0)
             return;
@@ -134,7 +157,7 @@ public class MapNode : MonoBehaviour {
         {
             float possible = GameHelper.Random(0f, 1f);
             CommonUtil.Logger.Log("possible " + possible);
-            if (possible <= ((float)num) / m_Events.Length)
+            if (possible <= Game.Instance.GetEventGeneratePossible())
             {
                 m_Events[i].GenEvent();
             }

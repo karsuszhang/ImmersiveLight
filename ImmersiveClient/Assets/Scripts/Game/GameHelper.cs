@@ -23,21 +23,27 @@ public abstract class CommonObjBase :MonoBehaviour
 public static class GameHelper {
     static System.Random s_Randomer;
 
-    public static Vector3 RandomNormalizedVector3()
+    public static Vector3 RandomNormalizedVector3(bool zero_y = false)
     {
         Vector3 ret = new Vector3(GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f));
         while(ret.magnitude <= Constant.FloatEplison)
             ret = new Vector3(GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f), GameHelper.Random(-1f, 1f));
 
+        if (zero_y)
+        {
+            ret.Normalize();
+            ret.y = 0;
+        }
         return ret.normalized;
     }
 
+    //note!! [min, max]
     public static int Random(int min, int max)
     {
         if (s_Randomer == null)
             s_Randomer = new System.Random(System.DateTime.Now.Millisecond);
 
-        return s_Randomer.Next(min, max);
+        return s_Randomer.Next(min, max + 1);
     }
 
     public static float Random(float min, float max)

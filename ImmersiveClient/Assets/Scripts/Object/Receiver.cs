@@ -39,7 +39,7 @@ public class Receiver : BaseCDObj {
         m_Render = gameObject.GetComponentInChildren<MeshRenderer>();
         m_Light = gameObject.GetComponentInChildren<Light>();
 
-        Game.Instance.RegLevelReceiver(this);
+        //Game.Instance.RegLevelReceiver(this);
     }
 	// Update is called once per frame
 	void Update () {
@@ -76,7 +76,7 @@ public class Receiver : BaseCDObj {
                     if (m_CurIntensity >= DestIntensity)
                     {
                         Done = true;
-                        Game.Instance.ReceiverComplete(this);
+                        //Game.Instance.ReceiverComplete(this);
                     }
 
                     float ratio = Mathf.Min(1f, (m_CurIntensity - m_BaseIntensity) / (DestIntensity - m_BaseIntensity));

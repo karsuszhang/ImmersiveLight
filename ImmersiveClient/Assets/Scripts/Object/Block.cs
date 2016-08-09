@@ -43,7 +43,7 @@ public class Block : BaseCDObj {
                 if (lp.LightIntensity >= BlockThreshold)
                 {
                     float absorb_rate = AbsorbEnergy ? (1f - AbsorbRate) : 1f;
-                    int lightnum = GameHelper.Random(MinReflectNum, MaxReflectNum + 1);
+                    int lightnum = GameHelper.Random(MinReflectNum, MaxReflectNum);
                     float total_intensity = lp.LightIntensity * absorb_rate;
                     float intentsity4cal = total_intensity;
                     float angle = Mathf.Acos(Vector3.Dot(final.normal, lp.Dir));

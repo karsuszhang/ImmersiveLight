@@ -32,7 +32,6 @@ public class Game : MonoBehaviour {
     }
     private List<BaseCDObj> m_CDObjs = new List<BaseCDObj>();
 
-    private Dictionary<Receiver, bool> m_LevelStatus = new Dictionary<Receiver, bool>();
 
     private InGameMainUI m_MainUI = null;
     private int m_CurScore = 0;
@@ -41,10 +40,13 @@ public class Game : MonoBehaviour {
     private MapGenerator m_MapGenerator = new MapGenerator();
 
     public ImmersiveReceiver CurPlayer { get; private set;}
+
+    public float GameTime { get ; private set; }
 	// Use this for initialization
 	void Awake () {
         
         m_MainUI = CommonUtil.UIManager.Instance.AddUI("UI/InGamePanel").GetComponent<InGameMainUI>();
+        GameTime = 0f;
 	}
 
     void Start()
@@ -55,6 +57,8 @@ public class Game : MonoBehaviour {
 	// Update is called once per frame
 	void LateUpdate () {
         m_MapGenerator.Update();
+
+        GameTime += Time.deltaTime;
 	}
 
     public void RegCDObj(BaseCDObj o)
@@ -99,20 +103,9 @@ public class Game : MonoBehaviour {
         }
     }
 
-    public void LevelComplete()
-    {
-        GameObject button = CommonUtil.UIManager.Instance.AddUI("UI/BackButton");
-        button.GetComponent<UIButton>().onClick.Add(new EventDelegate(this.Back2Main));
-    }
-
     public void Back2Main()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
-    }
-
-    public void RegLevelReceiver(Receiver r)
-    {
-        m_LevelStatus[r] = false;
     }
 
     public void AddScore(int s)
@@ -127,24 +120,48 @@ public class Game : MonoBehaviour {
         CommonUtil.Logger.Log("Immersive Player Change to " + ir.gameObject.name);
     }
 
-    public void ReceiverComplete(Receiver r)
+    #region Game RunTime Diffcult
+    const float GamePhase1 = Constant.SecondsOfMinute * 5f;
+    const float GamePhase2 = Constant.SecondsOfMinute * 10f;
+
+    public float GetEventNumMin()
     {
-        if (!m_LevelStatus.ContainsKey(r))
-        {
-            CommonUtil.Logger.LogError("Complete UnReg Receiver " + r.gameObject.name);
-            return;
-        }
-           
-        m_LevelStatus[r] = true;
-
-        bool finished = true;
-        foreach (var obj in m_LevelStatus)
-        {
-            if (!obj.Value)
-                finished = false;
-        }
-
-        if (finished)
-            LevelComplete();
+        return Mathf.Min(1f, GameTime / GamePhase1);
     }
+
+    public float GetEventGeneratePossible()
+    {
+        if (GameTime < GamePhase1)
+            return 0f;
+        
+        return Mathf.Min(1f, (GameTime - GamePhase1) / (GamePhase2 - GamePhase1));
+    }
+
+    public float GetNodeIntervalDis(Vector3 dir)
+    {
+        return GameHelper.Random(25f, 40f);
+    }
+
+    public float GetGuideLightInterval()
+    {
+        return 4f;
+    }
+
+    public bool GenTrapOnRoad()
+    {
+        float possible = GameHelper.Random(0f, 1f);
+        float cur = 0.05f + Mathf.Min(0.45f, Mathf.Max(0f, (GameTime - GamePhase1) / (GamePhase2 - GamePhase1) * 0.45f));
+        return possible <= cur;
+    }
+
+    public GameObject GenTrap()
+    {
+        return CommonUtil.ResourceMng.Instance.GetResource("Object/Trap", CommonUtil.ResourceType.Model) as GameObject;
+    }
+
+    public GameObject GenEnemy()
+    {
+        return CommonUtil.ResourceMng.Instance.GetResource("Object/Enemy", CommonUtil.ResourceType.Model) as GameObject;
+    }
+    #endregion
 }
