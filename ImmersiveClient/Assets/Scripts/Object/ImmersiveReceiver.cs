@@ -15,6 +15,11 @@ public class ImmersiveReceiver : BaseCDObj {
 	[SerializeField]
 	public float DropRate = 0.001f;
 
+    [SerializeField]
+    public float Speed = 2f;
+
+    public Vector3 Dir = Vector3.zero;
+
     public float HP { get ; private set;}
 
     public const float MAX_HP = 10f;
@@ -60,9 +65,75 @@ public class ImmersiveReceiver : BaseCDObj {
 		}*/
 	}
 
+    void LateUpdate()
+    {
+        #if UNITY_EDITOR
+        if(Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            Dir = new Vector3(0f, 0f, -1f);
+        }
+        if(Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            Dir = new Vector3(0f, 0f, 1f);
+        }
+        if(Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            Dir = new Vector3(1f, 0f, 0f);
+        }
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            Dir = new Vector3(-1f, 0f, 0f);
+        }
+        #else
+        #endif
+
+        CheckMove();
+    }
+
     void FixedUpdate()
     {
+        CheckObj();
         CheckOverlapInteractable();
+    }
+
+    void CheckMove()
+    {
+        int layer_mask = 1 << (int)SpecifiedLayer.MapObj;
+        Vector3 nextpos = this.Pos + Time.deltaTime * Speed * Dir;
+        Collider[] cds = Physics.OverlapSphere(nextpos, m_Collider.radius, layer_mask);
+        if (cds == null || cds.Length == 0)
+        {
+            this.Pos = nextpos;
+        }
+    }
+
+    void CheckObj()
+    {
+        int layer_mask = 1 << (int)SpecifiedLayer.PlayerObj;
+        Collider[] cds = Physics.OverlapSphere(this.transform.position, m_Collider.radius, layer_mask);
+        foreach (Collider cd in cds)
+        {
+            LightPlus lp = GameHelper.GetTypeUpAbove<LightPlus>(cd.gameObject);
+            if (lp != null)
+            {
+                lp.EndAt(lp.Pos, this);
+                {
+                    m_CurIntensity += lp.LightIntensity * AbsorbRate;
+                    //CommonUtil.CommonLogger.Log(string.Format("{0} Cur {1} Dest {2}", gameObject.name, m_CurIntensity, DestIntensity));
+                    if (m_CurIntensity >= DestIntensity)
+                    {
+                        m_CurIntensity -= DestIntensity;
+                        m_CurIntensity = Mathf.Max(m_CurIntensity, m_BaseIntensity);
+                        Game.Instance.AddScore(1);
+                    }
+
+                    float ratio = Mathf.Min(1f, (m_CurIntensity - m_BaseIntensity) / (DestIntensity - m_BaseIntensity));
+
+                    //gameObject.GetComponentInChildren<Light>().intensity = m_CurIntensity;
+                    SetRatio(ratio);
+                }
+            }
+        }
     }
 
     void CheckOverlapInteractable()
@@ -100,7 +171,7 @@ public class ImmersiveReceiver : BaseCDObj {
 
 	public override void CheckCD(BaseCDObj c)
 	{
-		if (c.Type == ObjectType.LightPlus)
+		/*if (c.Type == ObjectType.LightPlus)
 		{
 			RaycastHit final = FindCollideWithLightPlus(c as LightPlus);
 
@@ -126,7 +197,7 @@ public class ImmersiveReceiver : BaseCDObj {
 				}
 
 			}
-		}
+		}*/
 	}
 
     public void Stop()

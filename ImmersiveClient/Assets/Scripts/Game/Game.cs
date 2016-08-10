@@ -117,6 +117,7 @@ public class Game : MonoBehaviour {
     public void RegCurPlayer(ImmersiveReceiver ir)
     {
         CurPlayer = ir;
+        GameObject.FindObjectOfType<FollowCamera>().RegFollowObj(ir.gameObject);
         CommonUtil.Logger.Log("Immersive Player Change to " + ir.gameObject.name);
     }
 
