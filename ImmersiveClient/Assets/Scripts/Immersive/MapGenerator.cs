@@ -19,6 +19,7 @@ public class MapGenerator {
         startnode.transform.position = GameObject.Find("StartPoint").transform.position;
         startnode.GetComponent<MapNode>().GenGuideLight(Game.Instance.CurPlayer.Pos);
         MapNode mn = startnode.GetComponent<MapNode>();
+        mn.ParentPos = Game.Instance.CurPlayer.Pos;
         m_AliveNodes.Add(mn);
         mn.EventOnMapNodeFin += this.OnNodeFinished;
         //mn.GenChlidNode();
@@ -37,10 +38,9 @@ public class MapGenerator {
         mn.GenChlidNode();
     }
 
-    public MapNode GenMapNode(Vector3 ref_pos)
+    public MapNode GenMapNode(Vector3 ref_pos, Vector3 parent_pos)
     {
-        Vector3 dir = GameHelper.RandomNormalizedVector3();
-        dir.y = 0f;
+        Vector3 dir = parent_pos - ref_pos;
         dir.Normalize();
 
         Vector3 pos =  Game.Instance.GetNodeIntervalDis(dir) * dir + ref_pos;
@@ -48,8 +48,16 @@ public class MapGenerator {
 
         GameObject startnode = (CommonUtil.ResourceMng.Instance.GetResource("MapNode/MapNode" + mapnode, CommonUtil.ResourceType.Model)) as GameObject;
         startnode.transform.position = pos;
+
+        CommonUtil.Logger.Log(startnode.transform.position.ToString());
+        float angle = GameHelper.Random(90f, 270f);
+        CommonUtil.Logger.Log("Turn angle " + angle);
+        startnode.transform.RotateAround(ref_pos, Vector3.up, angle);
+        CommonUtil.Logger.Log(startnode.transform.position.ToString());
+
         startnode.GetComponent<MapNode>().GenGuideLight(ref_pos);
         MapNode mn = startnode.GetComponent<MapNode>();
+        mn.ParentPos = ref_pos;
         m_AliveNodes.Add(mn);
         mn.EventOnMapNodeFin += this.OnNodeFinished;
         return mn;

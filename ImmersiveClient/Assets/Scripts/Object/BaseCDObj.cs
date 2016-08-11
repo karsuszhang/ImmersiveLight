@@ -75,6 +75,7 @@ public class BaseCDObj : CommonObjBase {
 
     void OnDestroy()
     {
+        Released = true;
         Game.Instance.UnRegObject(this);
     }
 

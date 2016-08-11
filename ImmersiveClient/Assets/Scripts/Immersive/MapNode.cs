@@ -18,8 +18,8 @@ public class MapNode : MonoBehaviour {
     List<LightPlus> m_GuideLP = new List<LightPlus>();
     List<GameObject> m_ObstacleObjs = new List<GameObject>();
 
+    public Vector3 ParentPos;
     const int LinkChildNum = 1;
-    public MapNode ParentNode = null;
     private List<MapNode> m_LinkedChildNode = new List<MapNode>();
 
     EventPoint[] m_Events;
@@ -34,6 +34,22 @@ public class MapNode : MonoBehaviour {
 
         GenEvent();
 	}
+
+    void OnDestroy()
+    {
+        foreach (LightPlus lp in m_GuideLP)
+        {
+            if (!lp.Released)
+                lp.Release();
+        }
+        m_GuideLP.Clear();
+
+        foreach (GameObject go in m_ObstacleObjs)
+        {
+            GameObject.Destroy(go);
+        }
+        m_ObstacleObjs.Clear();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -136,7 +152,7 @@ public class MapNode : MonoBehaviour {
 
         for (int i = 0; i < LinkChildNum; i++)
         {
-            MapNode mn = Game.Instance.MapGen.GenMapNode(this.transform.position);
+            MapNode mn = Game.Instance.MapGen.GenMapNode(this.transform.position, ParentPos);
             //mn.GenGuideLight(this.transform.position);
             m_LinkedChildNode.Add(mn);
         }
@@ -149,7 +165,7 @@ public class MapNode : MonoBehaviour {
             return;
 
         int num = Mathf.Min(m_Events.Length, Mathf.CeilToInt(GameHelper.Random(Game.Instance.GetEventNumMin(), 1f) * m_Events.Length));
-        CommonUtil.Logger.Log("Event Num " + num);
+        //CommonUtil.Logger.Log("Event Num " + num);
         if (num == 0)
             return;
         
