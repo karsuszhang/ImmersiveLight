@@ -27,6 +27,16 @@ public class MapGenerator {
 
     public void Update()
     {
+        for (int i = 0; i < m_FinishedNodes.Count ;)
+        {
+            if ((m_FinishedNodes[i].transform.position - Game.Instance.CurPlayer.Pos).magnitude >= Constant.SafeDestroyNodeDistance)
+            {
+                GameObject.Destroy(m_FinishedNodes[i].gameObject);
+                m_FinishedNodes.RemoveAt(i);
+            }
+            else
+                i++;
+        }
     }
 
     void OnNodeFinished(MapNode mn)

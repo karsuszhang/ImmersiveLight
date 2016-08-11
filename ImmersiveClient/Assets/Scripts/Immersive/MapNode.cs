@@ -172,7 +172,7 @@ public class MapNode : MonoBehaviour {
         for (int i = 0; i < m_Events.Length; i++)
         {
             float possible = GameHelper.Random(0f, 1f);
-            CommonUtil.Logger.Log("possible " + possible);
+            //CommonUtil.Logger.Log("possible " + possible);
             if (possible <= Game.Instance.GetEventGeneratePossible())
             {
                 m_Events[i].GenEvent();
