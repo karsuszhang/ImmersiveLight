@@ -13,18 +13,8 @@ public class Main : MonoBehaviour {
 	
 	}
 
-    public void LoadLevel1()
+    public void Play()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Level2-1");
-    }
-
-    public void LoadLevel2()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Level2");
-    }
-
-    public void LoadLevel3()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Level9");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("ImmersiveMove");
     }
 }

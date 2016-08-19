@@ -182,4 +182,36 @@ public static class GameHelper {
 
         return angle;
     }
+
+    public static GameObject FindChild(this GameObject o, string name, bool recursive = false)
+    {
+        for (int i = 0; i < o.transform.childCount; i++)
+        {
+            Transform c = o.transform.GetChild(i);
+            if (c.gameObject.name == name)
+                return c.gameObject;
+
+            if (recursive)
+            {
+                GameObject ret = c.gameObject.FindChild(name, recursive);
+                if (ret != null)
+                    return ret;
+            }                
+        }
+
+        Transform r = o.transform.FindChild(name);
+        if (r != null)
+            return r.gameObject;
+
+        return null;
+    }
+
+    public static T GetComponentOnChild<T>(this GameObject o, string name, bool recursive = false) where T : MonoBehaviour
+    {
+        GameObject ret = o.FindChild(name, recursive);
+        if (ret == null)
+            return null;
+
+        return ret.GetComponent<T>();
+    }
 }
