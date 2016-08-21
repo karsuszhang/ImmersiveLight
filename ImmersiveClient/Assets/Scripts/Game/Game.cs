@@ -121,7 +121,18 @@ public class Game : MonoBehaviour {
         CommonUtil.Logger.Log("Immersive Player Change to " + ir.gameObject.name);
     }
 
-    #region Game RunTime Diffcult
+    public void TransferScore()
+    {
+        m_CurScore--;
+        PlayerInfo.Instance.ScoreInBag++;
+    }
+
+    public void GameOver()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+    }
+
+    #region Game RunTime Diffculty
     const float GamePhase1 = Constant.SecondsOfMinute * 5f;
     const float GamePhase2 = Constant.SecondsOfMinute * 10f;
 
@@ -163,6 +174,12 @@ public class Game : MonoBehaviour {
     public GameObject GenEnemy()
     {
         return CommonUtil.ResourceMng.Instance.GetResource("Object/Enemy", CommonUtil.ResourceType.Model) as GameObject;
+    }
+
+    public bool IsGenTransferStation()
+    {
+        float possible = GameHelper.Random(0f, 1f);
+        return possible <= 0.05f;
     }
     #endregion
 }

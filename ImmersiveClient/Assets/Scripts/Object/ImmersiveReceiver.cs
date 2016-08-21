@@ -32,6 +32,9 @@ public class ImmersiveReceiver : BaseCDObj {
 	private Light m_Light = null;
     private SphereCollider m_Collider = null;
 
+    private int m_FingerID = -1;
+    private Vector3 m_LastPos;
+
 	public ImmersiveReceiver() : base(ObjectType.Receiver)
 	{
         HP = MAX_HP;
@@ -86,6 +89,33 @@ public class ImmersiveReceiver : BaseCDObj {
         }
         #else
         #endif
+
+        foreach (Touch t in Input.touches)
+        {
+            if (t.phase == TouchPhase.Began)
+            {
+                //CommonUtil.Logger.Log("a touch begin " + t.fingerId + " cur record " + m_FingerID);
+                if (m_FingerID == -1)
+                {
+                    m_FingerID = t.fingerId;
+                    m_LastPos = new Vector3(t.position.x, 0f, t.position.y);
+                    CommonUtil.Logger.Log("Begin touch " + t.fingerId);
+                }
+
+            }
+            else if (t.phase == TouchPhase.Moved && m_FingerID == t.fingerId)
+            {
+                Vector3 n = new Vector3(t.position.x, 0f, t.position.y);
+                Dir = (n - m_LastPos).normalized;
+                //m_LastPos = n;
+                //CommonUtil.Logger.Log("Dir " + Dir.ToString());
+            }
+            else if ((t.phase == TouchPhase.Canceled || t.phase == TouchPhase.Ended) && m_FingerID == t.fingerId)
+            {
+                m_FingerID = -1;
+                CommonUtil.Logger.Log("Release Touch");
+            }
+        }
 
         CheckMove();
     }
@@ -167,45 +197,14 @@ public class ImmersiveReceiver : BaseCDObj {
         float intensity = m_BaseIntensity + (DestIntensity - m_BaseIntensity) * ratio;
 
         gameObject.GetComponentInChildren<Light>().intensity = intensity;
+
+        if (HP <= 0)
+            Game.Instance.GameOver();
     }
-
-	public override void CheckCD(BaseCDObj c)
-	{
-		/*if (c.Type == ObjectType.LightPlus)
-		{
-			RaycastHit final = FindCollideWithLightPlus(c as LightPlus);
-
-			if (final.collider != null)
-			{
-				LightPlus lp = (c as LightPlus);
-				lp.EndAt(final.point, this);
-				//if (lp.LightColor == ReceiveColor)
-				{
-					m_CurIntensity += lp.LightIntensity * AbsorbRate;
-					//CommonUtil.CommonLogger.Log(string.Format("{0} Cur {1} Dest {2}", gameObject.name, m_CurIntensity, DestIntensity));
-                    if (m_CurIntensity >= DestIntensity)
-                    {
-                        m_CurIntensity -= DestIntensity;
-                        m_CurIntensity = Mathf.Max(m_CurIntensity, m_BaseIntensity);
-                        Game.Instance.AddScore(1);
-                    }
-
-					float ratio = Mathf.Min(1f, (m_CurIntensity - m_BaseIntensity) / (DestIntensity - m_BaseIntensity));
-
-					//gameObject.GetComponentInChildren<Light>().intensity = m_CurIntensity;
-					SetRatio(ratio);
-				}
-
-			}
-		}*/
-	}
+        
 
     public void Stop()
     {
-        InputMover im = gameObject.GetComponent<InputMover>();
-        if (im != null)
-        {
-            im.Dir = Vector3.zero;
-        }
+        this.Dir = Vector3.zero;
     }
 }

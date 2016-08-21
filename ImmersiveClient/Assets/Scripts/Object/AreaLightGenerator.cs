@@ -56,6 +56,8 @@ public class AreaLightGenerator : MonoBehaviour {
                 m_Stop = true;
                 if (BindedLight != null)
                     BindedLight.Dim();
+                else
+                    CommonUtil.Logger.LogError(gameObject.name + " has no binded light");
             }
         }
 	}

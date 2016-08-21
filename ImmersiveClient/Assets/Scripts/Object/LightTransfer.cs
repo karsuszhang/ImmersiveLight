@@ -7,6 +7,11 @@ public class LightTransfer : BaseCDObj {
     public Stablizer[] Stabs;
 
     bool m_TransferLight = false;
+
+    float m_TimeCount = 0f;
+
+    const float TransferInterval = 0.5f;
+
     public LightTransfer() : base(ObjectType.LightTransfer)
     {
     }
@@ -26,9 +31,23 @@ public class LightTransfer : BaseCDObj {
         }
     }
 
+    void LateUpdate()
+    {
+        if (m_TransferLight)
+        {
+            m_TimeCount += Time.deltaTime;
+            if (m_TimeCount >= TransferInterval)
+            {
+                m_TimeCount -= TransferInterval;
+                Game.Instance.TransferScore();
+            }
+        }
+    }
+
     void TransferLight(bool trans)
     {
         m_TransferLight = trans;
+        m_TimeCount = 0f;
         CommonUtil.Logger.Log("TransferLight " + trans);
     }
 }
