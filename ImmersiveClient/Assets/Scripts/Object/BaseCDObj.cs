@@ -104,7 +104,7 @@ public class BaseCDObj : CommonObjBase {
 
     public virtual void Release()
     {
-        //CommonUtil.Logger.Log(gameObject.name + " Call for Release");
+        CommonUtil.Logger.Log(gameObject.name + " Call for Release");
         /*if(gameObject.name.Contains("sat"))
         {
             GameHelper.DebugBreak(gameObject.name);

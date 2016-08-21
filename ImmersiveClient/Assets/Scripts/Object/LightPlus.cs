@@ -91,19 +91,10 @@ public class LightPlus : BaseCDObj {
             if (Speed > 0.1f)
                 this.Pos += Time.deltaTime * Speed * gameObject.transform.forward;
         }
-        /*else
-        {
-            Length += (Time.deltaTime * Speed * gameObject.transform.forward).magnitude;
-            if (Length >= m_DestLength)
-            {
-                Length = m_DestLength;
-                m_CurState = RunningState.Flying;
-            }
-        }*/
 
         if (m_CurState == RunningState.Flying || m_CurState == RunningState.Starting)
         {
-            //if( Speed > Constant.FloatEplison)
+            if( Speed > Constant.FloatEplison)
                 Game.Instance.CheckCD(this, m_UnCollideObjs);
         }
         else if (m_CurState == RunningState.Ending)

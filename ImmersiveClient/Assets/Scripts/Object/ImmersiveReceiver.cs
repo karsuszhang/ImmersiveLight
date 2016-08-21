@@ -149,6 +149,7 @@ public class ImmersiveReceiver : BaseCDObj {
                 lp.EndAt(lp.Pos, this);
                 {
                     m_CurIntensity += lp.LightIntensity * AbsorbRate;
+                    CommonUtil.Logger.Log("Eat Light " + lp.LightIntensity + " at rate " + AbsorbRate + " cur intensity " + m_CurIntensity);
                     //CommonUtil.CommonLogger.Log(string.Format("{0} Cur {1} Dest {2}", gameObject.name, m_CurIntensity, DestIntensity));
                     if (m_CurIntensity >= DestIntensity)
                     {
@@ -164,6 +165,11 @@ public class ImmersiveReceiver : BaseCDObj {
                 }
             }
         }
+    }
+
+    public override void CheckCD(BaseCDObj c)
+    {
+        //not doing default
     }
 
     void CheckOverlapInteractable()
